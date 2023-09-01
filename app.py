@@ -35,7 +35,7 @@ def display_homepage():
 
 @app.route('/add', methods = ['GET', 'POST'])
 def handle_add_pet_form():
-    '''displays add pet form, on submit validates and processes form'''
+    '''displays add pet form; on submit validates and processes form'''
 
     form = AddPetForm()
 
@@ -60,18 +60,18 @@ def handle_add_pet_form():
 
 @app.route('/<int:pet_id>', methods = ['GET', 'POST'])
 def handle_edit_pet_form(pet_id):
-    '''displays add pet form, on submit validates and processes form'''
+    '''displays pet details and edit form. On submit, updates pet details.'''
 
     pet = Pet.query.get(pet_id)
     form = EditPetForm(obj=pet)
 
     if form.validate_on_submit():
-
+        print("notes", form.notes.data, "available", form.available.data)
         pet.photo_url = form.photo_url.data
         pet.notes = form.notes.data
         pet.available = form.available.data
         db.session.commit()
 
-        return redirect(f'/{pet_id}')
+        return redirect(f'/{pet.id}')
     else:
         return render_template('pet_detail.html', pet=pet, form=form)

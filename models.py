@@ -4,7 +4,8 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 
-DEFAULT_IMAGE_URL = '/static/default-image.jpg'
+DEFAULT_IMAGE_URL = "https://upload.wikimedia.org/wikipedia/commons/4/47/"\
+    "Octodon_degus_-Heidelberg_Zoo%2C_Germany-8a.jpg"
 
 
 def connect_db(app):
@@ -18,7 +19,7 @@ def connect_db(app):
 
 
 class Pet(db.Model):
-    """Pet."""
+    """Pet data model"""
     __tablename__ = "pets"
     id = db.Column(
         db.Integer,
@@ -39,7 +40,7 @@ class Pet(db.Model):
     photo_url = db.Column(
         db.String,
         nullable=False,
-        default=""
+        default=DEFAULT_IMAGE_URL
     )
 
     age = db.Column(

@@ -5,6 +5,7 @@ from wtforms import StringField, SelectField, BooleanField
 from wtforms.validators import InputRequired, Optional, URL, AnyOf
 
 class AddPetForm(FlaskForm):
+    '''Form for adding a pet'''
     name = StringField("Pet Name",
                        validators=[InputRequired()])
     species = StringField("Species",
@@ -22,6 +23,7 @@ class AddPetForm(FlaskForm):
 
 
 class EditPetForm(FlaskForm):
+    '''Form for editing a pet'''
     photo_url = StringField("Image",
                     validators=[Optional(), URL()]
                 )
