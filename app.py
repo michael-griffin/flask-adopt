@@ -58,8 +58,6 @@ def handle_add_pet_form():
 
 
 
-
-
 @app.route('/<int:pet_id>', methods = ['GET', 'POST'])
 def handle_edit_pet_form(pet_id):
     '''displays add pet form, on submit validates and processes form'''
