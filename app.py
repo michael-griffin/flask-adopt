@@ -2,10 +2,11 @@
 
 import os
 
-from flask import Flask
+from flask import Flask, render_template, flash, redirect
 from flask_debugtoolbar import DebugToolbarExtension
 
-from models import connect_db
+from models import connect_db, Pet, db
+from forms import AddPetForm
 
 app = Flask(__name__)
 
@@ -22,3 +23,35 @@ connect_db(app)
 # app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
 toolbar = DebugToolbarExtension(app)
+
+
+@app.get('/')
+def display_homepage():
+    '''displays homepage'''
+
+    pets = Pet.query.all()
+    return render_template('home.html', pets=pets)
+
+@app.route('/add', methods = ['GET', 'POST'])
+def handle_add_pet_form():
+    '''displays add pet form, on submit validates and processes form'''
+
+    form = AddPetForm()
+
+    if form.validate_on_submit():
+
+        pet  = Pet(
+            name=form.name.data,
+            species=form.species.data,
+            photo_url=form.photo_url.data or None,
+            age=form.age.data,
+            notes=form.notes.data)
+
+        db.session.add(pet)
+        db.session.commit()
+
+        return redirect('/')
+
+    else:
+
+        return render_template('add-pet-form.html', form = form)

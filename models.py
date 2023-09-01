@@ -41,7 +41,8 @@ class Pet(db.Model):
 
     age = db.Column(
         db.String(10),
-        db.CheckConstraint(age in ['baby', 'young', 'adult', 'senior']),
+        #TODO: Make this work? Do we need to if it's a drop-down select?
+        # db.CheckConstraint("age in ['baby', 'young', 'adult', 'senior']"),
         nullable=False
     )
 
@@ -54,5 +55,3 @@ class Pet(db.Model):
         nullable=False,
         default=True
     )
-
-
