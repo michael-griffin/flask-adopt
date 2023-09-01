@@ -2,11 +2,13 @@
 
 import os
 
-from flask import Flask, render_template, flash, redirect
+from flask import Flask, render_template, flash, redirect, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
-
+import requests
 from models import connect_db, Pet, db, DEFAULT_IMAGE_URL
 from forms import AddPetForm, EditPetForm
+from petfinder import update_auth_token, PETFINDER_URL
+
 
 app = Flask(__name__)
 
@@ -26,10 +28,43 @@ connect_db(app)
 toolbar = DebugToolbarExtension(app)
 
 
+
+auth_token = None
+
+def refresh_credentials():
+    """Just once, get token and store it globally."""
+    global auth_token
+    auth_token = update_auth_token()
+    print(f'auth token is now: \n{auth_token}')
+
+
+# with app.app_context seems to trigger on file changes.
+# not sure what happens when you have this as a production
+with app.app_context():
+    refresh_credentials()
+
+
+@app.get("/random")
+def show_pet_info():
+    """Return page about book."""
+
+    resp = requests.get(PETFINDER_URL,
+        headers = {"Authorization" : f"Bearer {auth_token}"},
+        params={"limit": 20})
+
+    pet_data = resp.json()
+    print(f"random pets are: {pet_data}")
+    # using the APIs JSON data, render full HTML page
+    #return render_template("book_info.html", book=book_data)
+    return jsonify(pet_data)
+
+
+#Once we get auth token:
+#The request header has the form Authorization: Bearer <Oauth Token>
+
 @app.get('/')
 def display_homepage():
-   """ displays homepage"""
-
+    """ displays homepage"""
     pets = Pet.query.all()
     return render_template('home.html', pets=pets)
 
