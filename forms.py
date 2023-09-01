@@ -20,6 +20,7 @@ class AddPetForm(FlaskForm):
                             AnyOf(["baby", "young","adult", "senior"])]
             )
     notes = StringField("Notes")
+    #FIXME: TextAreaField
 
 
 class EditPetForm(FlaskForm):

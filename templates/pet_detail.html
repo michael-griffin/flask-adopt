@@ -11,6 +11,10 @@
 
 </div>
 
+{% for message in get_flashed_messages() %}
+<p style="color:green;">{{ message }}</p>
+{% endfor %}
+
 <p>Edit your pet details</p>
 <form action="/{{ pet.id }}" method="POST" class="pet-form">
 
